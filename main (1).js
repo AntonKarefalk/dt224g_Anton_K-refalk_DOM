@@ -39,17 +39,17 @@ function validateForm() {
     // Kontrollera formulärets obligatoriska fält
     // Namnet
     if (fullnameInput.ariaValueMax.trim() === "") {
-        errors.push("Du måste fylla i ditt namn.")
+        errors.push("Du måste fylla i ditt namn.");
     }
 
     // E-post
     if (emailInput.ariaValueMax.trim() === "") {
-        errors.push("Du måste fylla i din e-post.")
+        errors.push("Du måste fylla i din e-post.");
     }
 
     // Telefonnummer
     if (phoneInput.ariaValueMax.trim() === "") {
-        errors.push("Du måste fylla i ditt telefonnummer.")
+        errors.push("Du måste fylla i ditt telefonnummer.");
     }
 
     // Visa eventuella felmeddelanden
@@ -123,7 +123,7 @@ function loadHistory() {
             // Gör om JSON-stringen till JavaScript
             const savedData = JSON.parse(savedHistory);
             // Kollar om information är en array
-            if (Array.isArray(sacedData)) {
+            if (Array.isArray(savedData)) {
                 history = savedData.filter(function(student) {
                     return student !== null &&
                     typeof student === "object" &&
