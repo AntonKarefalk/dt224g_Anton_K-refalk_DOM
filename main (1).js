@@ -1,7 +1,7 @@
 "use strict";
 /*
  * Laboration 5 - Studentkortsgenerator
- * Namn: DITT NAMN
+ * Namn: Anton Kårefalk
  */
 
 // Hämta element från DOM
@@ -33,11 +33,30 @@ let history = [];
  * @returns {boolean}
  */
 function validateForm() {
+    // Ta bort tidiage felmeddelanden
+    errors = [];
+    
     // Kontrollera formulärets obligatoriska fält
+    // Namnet
+    if (fullnameInput.ariaValueMax.trim() === "") {
+        errors.push("Du måste fylla i ditt namn.")
+    }
+
+    // E-post
+    if (emailInput.ariaValueMax.trim() === "") {
+        errors.push("Du måste fylla i din e-post.")
+    }
+
+    // Telefonnummer
+    if (phoneInput.ariaValueMax.trim() === "") {
+        errors.push("Du måste fylla i ditt telefonnummer.")
+    }
 
     // Visa eventuella felmeddelanden
+    displayErrors();
 
     // Returnera resultatet (true eller false) av valideringen
+    return errors.length === 0;
 }
 
 
