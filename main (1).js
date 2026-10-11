@@ -65,8 +65,14 @@ function validateForm() {
  */
 function displayErrors() {
     // Rensa tidigare felmeddelanden
+    errorList.innterHTML = "";
 
     // Skriv ut aktuella felmeddelanden till DOM
+    errors.forEach(function(error) {
+        const listItem = document.createElement("li");
+        listItem.textContent = error;
+        errorList.appendChild(listItem);
+    });
 }
 
 
@@ -75,12 +81,24 @@ function displayErrors() {
  */
 function createStudentCard() {
     // Hämta information från formuläret
+    const student = {
+        fullname: fullnameInput.value.trim(),
+        email: emailInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        font: fontSelect.value
+    };
 
     // Uppdatera studentkortet
+    previewFullname.textContent = student.fullname;
+    previewEmail.textContent = student.email;
+    previewPhone.textContent = student.phone;
 
     // Lägg till studentkortet i historiken
+    history.unshift(student);
 
     // Spara och uppdatera historiken
+    saveHistory();
+    renderHistory();
 }
 
 
@@ -89,6 +107,8 @@ function createStudentCard() {
  */
 function saveHistory() {
     // Spara history i localStorage
+    // Genom att göra om arrayen till en JSON string
+    localStorage.setItem("studentHistory", JSON.stringify(history));
 }
 
 
@@ -97,6 +117,13 @@ function saveHistory() {
  */
 function loadHistory() {
     // Hämta eventuell sparad historik
+    const savedHistory = localStorage.getItem("studentHistory");
+    if (savedHistory !== null) {
+        try {
+            // Gör om JSON-stringen till JavaScript
+            const savedData = JSON.parse(savedHistory);
+        }
+    }
 
     // Uppdatera history
 }
@@ -107,6 +134,7 @@ function loadHistory() {
  */
 function renderHistory() {
     // Rensa tidigare visad historik
+    historySection.innerHTML = "";
 
     // Skriv ut innehållet i history till DOM
 }
