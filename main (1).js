@@ -198,8 +198,21 @@ function renderHistory() {
  */
 function clearForm() {
     // Återställ formulär och studentkort
+    form.reset();
+
+    // Studentkort
+    previewFullname.textContent = "Name";
+    previewEmail.textContent = "E-post";
+    previewPhone.textContent = "Telefon";
+
+    // Typesnitt
+    previewFullname.style.fontFamily = "";
+    previewEmail.style.fontFamily = "";
+    previewPhone.style.fontFamily = "";
 
     // Rensa eventuella felmeddelanden
+    errors = [];
+    displayErrors();
 }
 
 
@@ -208,8 +221,11 @@ function clearForm() {
  */
 function deleteHistory() {
     // Radera sparad historik
+    localStorage.removeItem("studentHistory");
+    history = [];
 
     // Uppdatera history och visningen på sidan
+    renderHistory();
 }
 
 
@@ -217,14 +233,26 @@ function deleteHistory() {
 
 // När formuläret skickas:
 // - validera inmatningen
-// - skapa studentkort om valideringen lyckas
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
 
+// - skapa studentkort om valideringen lyckas
+if (validateForm()) {
+    createStudentCard();
+}
+});
 
 // När användaren klickar på "Rensa"
-
+clearButton.addEventListener("click", function() {
+    clearForm();
+});
 
 // När användaren klickar på "Radera historik"
+deleteHistoryButton.addEventListener("click", function() {
+    deleteHistory();
+});
 
 
 // När sidan laddas:
 // - läs in och visa eventuell tidigare historik
+loadHistory();
