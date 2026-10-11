@@ -122,12 +122,29 @@ function loadHistory() {
         try {
             // Gör om JSON-stringen till JavaScript
             const savedData = JSON.parse(savedHistory);
+            // Kollar om information är en array
+            if (Array.isArray(sacedData)) {
+                history = savedData.filter(function(student) {
+                    return student !== null &&
+                    typeof student === "object" &&
+                    typeof student.fullname === "string" &&
+                    typeof student.email === "string" &&
+                    typeof student.phone === "string" &&
+                    typeof student.font === "string";
+            });
+        } else {
+            // Om inte, så ska den använda en tom array
+            history = [];
         }
+    } catch (error) {
+        // använd tom array om JSON-datan inte fungerar
+        history = [];
     }
-
-    // Uppdatera history
 }
 
+    // Uppdatera history
+    renderHistory();
+}
 
 /**
  * Visar historiken på sidan.
@@ -137,6 +154,42 @@ function renderHistory() {
     historySection.innerHTML = "";
 
     // Skriv ut innehållet i history till DOM
+    history.forEach(function(student) {
+        // Skapa ett element för historiken
+        const card = document.createElement("div");
+
+        // Skapa ett element för namnet
+        const name = document.createElement("p");
+        name.textConent = "Name: " + student.fullname;
+
+        // Skapa ett element för e-posten
+        const email = document.createElement("p");
+        email.textContent = "E-post: " + student.email;
+
+        // Skapa ett element för telefonnumret
+        const phone = document.createElement("p");
+        phone.textContent = "Telefon " + student.phone;
+
+        // Skapa ett element för typsnittet
+        const font = document.createElement("p");
+        font.textContent = "Typsnitt: " + student.font;
+
+        // Använd den valda typsnittet
+        card.style.fontFamily = student.font;
+
+        // Lägg till informationen i historiken
+        card.appendChild(name);
+        card.appendChild(email);
+        card.appendChild(phone);
+        card.appendChild(font);
+
+        // Lägg till en divider efter historiken
+        const divider = document.createElement("hr");
+        card.appendChild(divider);
+
+        // Lägg till historiken på sidan
+        historySection.appendChild(card);
+    });
 }
 
 
