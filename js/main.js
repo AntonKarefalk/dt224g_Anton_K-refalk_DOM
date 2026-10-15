@@ -21,6 +21,9 @@ const errorList = document.querySelector("#errorlist");
 const historySection = document.querySelector("#history");
 const deleteHistoryButton = document.querySelector("#delete");
 
+const previewCard = document.querySelector("#preview .card");
+
+form.noValidate = true;
 
 // Array som används för felmeddelanden
 let errors = [];
@@ -38,17 +41,17 @@ function validateForm() {
     
     // Kontrollera formulärets obligatoriska fält
     // Namnet
-    if (fullnameInput.ariaValueMax.trim() === "") {
+    if (fullnameInput.value.trim() === "") {
         errors.push("Du måste fylla i ditt namn.");
     }
 
     // E-post
-    if (emailInput.ariaValueMax.trim() === "") {
+    if (emailInput.value.trim() === "") {
         errors.push("Du måste fylla i din e-post.");
     }
 
     // Telefonnummer
-    if (phoneInput.ariaValueMax.trim() === "") {
+    if (phoneInput.value.trim() === "") {
         errors.push("Du måste fylla i ditt telefonnummer.");
     }
 
@@ -65,7 +68,7 @@ function validateForm() {
  */
 function displayErrors() {
     // Rensa tidigare felmeddelanden
-    errorList.innterHTML = "";
+    errorList.innerHTML = "";
 
     // Skriv ut aktuella felmeddelanden till DOM
     errors.forEach(function(error) {
@@ -85,15 +88,28 @@ function createStudentCard() {
         fullname: fullnameInput.value.trim(),
         email: emailInput.value.trim(),
         phone: phoneInput.value.trim(),
-        font: fontSelect.value
+        font: fontSelect.value,
+        card: previewCard.style.fontFamily = fontSelect.value,
     };
 
     // Uppdatera studentkortet
     previewFullname.textContent = student.fullname;
     previewEmail.textContent = student.email;
     previewPhone.textContent = student.phone;
+    previewCard.style.fontFamily = student.font;
 
     // Lägg till studentkortet i historiken
+    const alreadyExists = history.some(function (savedStudent) {
+        return (
+            savedStudent.fullname === student.fullname &&
+            savedStudent.email === student.email &&
+            savedStudent.phone === student.phone &&
+            savedStudent.font === student.font
+        );
+    });
+
+
+if (!alreadyExists) {
     history.unshift(student);
 
     // Spara och uppdatera historiken
@@ -101,6 +117,7 @@ function createStudentCard() {
     renderHistory();
 }
 
+}
 
 /**
  * Sparar historiken i localStorage.
@@ -111,17 +128,18 @@ function saveHistory() {
     localStorage.setItem("studentHistory", JSON.stringify(history));
 }
 
-
 /**
  * Läser in tidigare historik från localStorage.
  */
 function loadHistory() {
     // Hämta eventuell sparad historik
     const savedHistory = localStorage.getItem("studentHistory");
+
     if (savedHistory !== null) {
         try {
             // Gör om JSON-stringen till JavaScript
             const savedData = JSON.parse(savedHistory);
+
             // Kollar om information är en array
             if (Array.isArray(savedData)) {
                 history = savedData.filter(function(student) {
@@ -160,7 +178,7 @@ function renderHistory() {
 
         // Skapa ett element för namnet
         const name = document.createElement("p");
-        name.textConent = "Name: " + student.fullname;
+        name.textContent = "Name: " + student.fullname;
 
         // Skapa ett element för e-posten
         const email = document.createElement("p");
@@ -192,7 +210,6 @@ function renderHistory() {
     });
 }
 
-
 /**
  * Rensar formulär, aktuellt studentkort och felmeddelanden.
  */
@@ -206,15 +223,20 @@ function clearForm() {
     previewPhone.textContent = "Telefon";
 
     // Typesnitt
-    previewFullname.style.fontFamily = "";
-    previewEmail.style.fontFamily = "";
-    previewPhone.style.fontFamily = "";
+    previewCard.style.fontFamily = "";
 
     // Rensa eventuella felmeddelanden
-    errors = [];
-    displayErrors();
-}
+    function displayErrors() {
+        errorList.innerHTML = "";
 
+        errors.forEach(function (error) {
+            const li = document.createElement("li");
+            li.textContent = error;
+            errorList.appendChild(li);
+        });
+    }
+
+}
 
 /**
  * Raderar hela historiken.
